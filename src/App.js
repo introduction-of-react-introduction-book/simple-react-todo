@@ -1,23 +1,38 @@
-import logo from './logo.svg';
-import './App.css';
+import { useState } from "react";
 
 function App() {
+  const [idCounter, setIdCounter] = useState(0);
+  const [todos, setTodo] = useState([]);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const inputText = e.target["task"].value;
+    const nextid = idCounter + 1;
+    setIdCounter(nextid);
+    setTodo([...todos, { id: nextid, task: inputText, checked: false }]);
+  };
+
+  const handleClickDeleteButton = (id) => {
+    setTodo(todos.filter((todo) => todo.id !== id));
+  };
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <form onSubmit={handleSubmit}>
+        <input name="task" />
+        <button>登録</button>
+      </form>
+      <div>
+        {todos.map((todo) => (
+          <div key={todo.id}>
+            <input type="checkbox" />
+            {todo.task}
+            <button onClick={() => handleClickDeleteButton(todo.id)}>
+              削除
+            </button>
+          </div>
+        ))}
+      </div>
     </div>
   );
 }
